@@ -8,35 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Dopamind Design System */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 217 91% 17%;
+    
+    /* Primary - Dopamind Blue */
+    --primary: 195 67% 57%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 195 67% 67%;
+    
+    /* Secondary - Dopamind Purple */
+    --secondary: 283 39% 53%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 283 39% 63%;
+    
+    /* Accent - Mint Green */
+    --accent: 145 63% 49%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 145 63% 59%;
+    
+    /* Neutral colors */
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 9% 46%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 217 91% 17%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --popover-foreground: 217 91% 17%;
+    
+    /* UI elements */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 195 67% 57%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Design tokens */
+    --radius: 0.75rem;
+    
+    /* Gradients */
+    --gradient-dopamind: linear-gradient(135deg, hsl(195 67% 57%), hsl(283 39% 53%));
+    --gradient-energy: linear-gradient(90deg, hsl(145 63% 49%), hsl(195 67% 57%));
+    --gradient-focus: linear-gradient(135deg, hsl(283 39% 53%), hsl(283 39% 63%));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px hsl(195 67% 57% / 0.1);
+    --shadow-glow: 0 0 30px hsl(195 67% 57% / 0.3);
+    --shadow-card: 0 2px 15px -3px hsl(220 13% 91% / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +122,91 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Dopamind component styles */
+  .dopamind-card {
+    @apply bg-card rounded-xl border border-border;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+  
+  .dopamind-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .gradient-dopamind {
+    background: var(--gradient-dopamind);
+  }
+  
+  .gradient-energy {
+    background: var(--gradient-energy);
+  }
+  
+  .gradient-focus {
+    background: var(--gradient-focus);
+  }
+  
+  .glow-effect {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .pulse-gentle {
+    animation: pulse-gentle 2s ease-in-out infinite;
+  }
+  
+  .bounce-in {
+    animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 1px 3px hsl(0 0% 0% / 0.1);
+  }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
