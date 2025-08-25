@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send, Brain, Lightbulb, Heart, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { aiService } from "@/lib/ai-service";
+import ApiKeyInput from "@/components/ApiKeyInput";
 
 interface Message {
   id: string;
@@ -15,22 +17,46 @@ interface Message {
 
 const AIChat = () => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
+  const [showApiSetup, setShowApiSetup] = useState(true);
+  const [isApiConfigured, setIsApiConfigured] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputMessage, setInputMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Inicializar com mensagem de boas-vindas
+    initializeChat();
+  }, []);
+
+  const initializeChat = () => {
+    const welcomeMessage: Message = {
+      id: "welcome",
       type: "ai",
-      content: "Olá! Eu sou a Mindy, sua assistente de produtividade e bem-estar! 😊 Como posso te ajudar hoje? Vejo que você está com uma energia boa!",
+      content: `Olá! Eu sou a Mindy, sua especialista em neurociência e bem-estar mental! 🧠💙
+
+Como psicóloga digital, estou aqui para te ajudar com estratégias baseadas em ciência para melhorar seu foco, reduzir ansiedade e otimizar sua mente.
+
+Pode me contar como você está se sentindo hoje ou o que gostaria de trabalhar? 😊`,
       timestamp: new Date(),
       suggestions: [
+        "Estou estressado e preciso de ajuda",
         "Como melhorar meu foco?",
-        "Sugestões para hoje",
-        "Analisar meu humor",
-        "Criar nova rotina"
+        "Tenho dificuldade para dormir",
+        "Procrastino muito, me ajude"
       ]
-    }
-  ]);
-  
-  const [inputMessage, setInputMessage] = useState("");
+    };
+    setMessages([welcomeMessage]);
+  };
+
+  const handleApiKeySet = (apiKey: string) => {
+    aiService.setApiKey(apiKey);
+    setIsApiConfigured(true);
+    setShowApiSetup(false);
+  };
+
+  const handleSkipApi = () => {
+    setShowApiSetup(false);
+  };
 
   const quickActions = [
     { icon: "🧠", label: "Análise de Foco", prompt: "Analise meu padrão de foco hoje" },
@@ -41,8 +67,8 @@ const AIChat = () => {
     { icon: "🧘", label: "Relaxamento", prompt: "Estou estressado, o que fazer?" }
   ];
 
-  const handleSendMessage = (content: string) => {
-    if (!content.trim()) return;
+  const handleSendMessage = async (content: string) => {
+    if (!content.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -53,12 +79,40 @@ const AIChat = () => {
 
     setMessages(prev => [...prev, userMessage]);
     setInputMessage("");
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(content);
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    try {
+      // Contexto do usuário (pode ser expandido com dados reais)
+      const userContext = {
+        mood: "neutro", // Pode vir do MoodTracker
+        energy: 75,     // Pode vir de dados reais
+        recentActivity: "navegando no app",
+        timeOfDay: new Date().getHours() < 12 ? "manhã" : new Date().getHours() < 18 ? "tarde" : "noite"
+      };
+
+      const aiResponse = await aiService.generateResponse(content.trim(), userContext);
+      
+      const responseMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "ai",
+        content: aiResponse.content,
+        timestamp: new Date(),
+        suggestions: aiResponse.suggestions
+      };
+
+      setMessages(prev => [...prev, responseMessage]);
+    } catch (error) {
+      console.error('Erro ao gerar resposta:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "ai",
+        content: "Desculpe, tive um problema ao processar sua mensagem. Pode tentar novamente? 😅",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const generateAIResponse = (userInput: string): Message => {
@@ -107,6 +161,43 @@ const AIChat = () => {
     };
   };
 
+  // Mostrar configuração de API se necessário
+  if (showApiSetup) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <header className="bg-background border-b border-border/50 sticky top-0 z-10">
+          <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/dashboard')}
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <Brain className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-foreground">Configurar Mindy</h1>
+                  <p className="text-sm text-muted-foreground">Sua assistente de IA personalizada</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        
+        <div className="flex-1 flex items-center justify-center p-4">
+          <ApiKeyInput 
+            onApiKeySet={handleApiKeySet}
+            onSkip={handleSkipApi}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
@@ -126,7 +217,9 @@ const AIChat = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">Conversar com Mindy</h1>
-                <p className="text-sm text-muted-foreground">Sua assistente de IA personalizada</p>
+                <p className="text-sm text-muted-foreground">
+                  {isApiConfigured ? "IA Avançada ativada 🧠✨" : "Assistente especialista em neurociência"}
+                </p>
               </div>
             </div>
           </div>
@@ -143,6 +236,7 @@ const AIChat = () => {
               size="sm"
               className="h-16 flex-col text-xs"
               onClick={() => handleSendMessage(action.prompt)}
+              disabled={isLoading}
             >
               <span className="text-lg mb-1">{action.icon}</span>
               {action.label}
@@ -189,6 +283,7 @@ const AIChat = () => {
                           size="sm"
                           className="text-xs h-7"
                           onClick={() => handleSendMessage(suggestion)}
+                          disabled={isLoading}
                         >
                           {suggestion}
                         </Button>
@@ -208,12 +303,25 @@ const AIChat = () => {
               {message.type === "user" && (
                 <div className="flex-shrink-0 p-2 bg-primary rounded-full h-fit">
                   <div className="w-5 h-5 text-primary-foreground text-xs font-bold flex items-center justify-center">
-                    J
+                    U
                   </div>
                 </div>
               )}
             </div>
           ))}
+          
+          {isLoading && (
+            <div className="flex gap-3 justify-start">
+              <div className="flex-shrink-0 p-2 bg-primary/10 rounded-full h-fit">
+                <Brain className="w-5 h-5 text-primary animate-pulse" />
+              </div>
+              <div className="bg-muted p-4 rounded-2xl">
+                <div className="text-sm text-muted-foreground">
+                  Mindy está pensando... 🧠
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -225,12 +333,13 @@ const AIChat = () => {
               placeholder="Digite sua mensagem para Mindy..."
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSendMessage(inputMessage)}
+              onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage(inputMessage)}
               className="flex-1"
+              disabled={isLoading}
             />
             <Button
               onClick={() => handleSendMessage(inputMessage)}
-              disabled={!inputMessage.trim()}
+              disabled={!inputMessage.trim() || isLoading}
               className="bg-primary hover:bg-primary/90"
             >
               <Send className="w-4 h-4" />
