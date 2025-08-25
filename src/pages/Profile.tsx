@@ -42,7 +42,7 @@ const Profile = () => {
 
   const handleContinue = () => {
     // Here we would save the profile data
-    navigate('/dashboard');
+    navigate('/mood-first');
   };
 
   return (
@@ -149,8 +149,8 @@ const Profile = () => {
                   className={`
                     w-full p-3 rounded-lg border text-left transition-all duration-200
                     ${profile.habits.includes(habit)
-                      ? 'border-accent bg-accent/5 text-accent-foreground' 
-                      : 'border-border hover:border-accent/50 text-foreground'
+                      ? 'border-primary bg-primary/10 text-foreground font-medium' 
+                      : 'border-border hover:border-primary/50 text-foreground'
                     }
                   `}
                 >
@@ -189,7 +189,7 @@ const Profile = () => {
             size="lg"
             className="w-full bg-primary hover:bg-primary/90 h-12"
           >
-            Continuar para o Dashboard
+            Continuar para Humor
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </div>

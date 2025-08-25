@@ -17,8 +17,8 @@ interface Message {
 
 const AIChat = () => {
   const navigate = useNavigate();
-  const [showApiSetup, setShowApiSetup] = useState(true);
-  const [isApiConfigured, setIsApiConfigured] = useState(false);
+  const [showApiSetup, setShowApiSetup] = useState(false);
+  const [isApiConfigured, setIsApiConfigured] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +90,8 @@ Pode me contar como você está se sentindo hoje ou o que gostaria de trabalhar?
         timeOfDay: new Date().getHours() < 12 ? "manhã" : new Date().getHours() < 18 ? "tarde" : "noite"
       };
 
-      const aiResponse = await aiService.generateResponse(content.trim(), userContext);
+      // Generate fictional AI response about neuroscience and psychology
+      const aiResponse = generateNeuroResponse(content.trim());
       
       const responseMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -115,48 +116,57 @@ Pode me contar como você está se sentindo hoje ou o que gostaria de trabalhar?
     }
   };
 
-  const generateAIResponse = (userInput: string): Message => {
+  const generateNeuroResponse = (userInput: string) => {
     const responses = {
       foco: {
-        content: "Com base nos seus dados, você tem 3h15min de foco hoje! 🎯 Para melhorar ainda mais, recomendo:\n\n• 🍅 Técnica Pomodoro: 25min foco + 5min pausa\n• 📱 Modo avião durante estudos\n• 🎵 Música instrumental para concentração\n\nQuer que eu configure um timer Pomodoro para você?",
-        suggestions: ["Configurar Pomodoro", "Mais dicas de foco", "Analisar distrações"]
+        content: "🧠 **Neurociência do Foco:**\n\nO córtex pré-frontal é responsável pela atenção executiva. Para otimizá-lo:\n\n• 🍅 **Técnica Pomodoro:** Trabalha com os ciclos naturais de dopamina (25min é o tempo ideal para manter neurotransmissores ativos)\n• 🚫 **Eliminação de distrações:** Cada interrupção leva em média 23 minutos para reconquistar o foco profundo\n• 🎵 **Música 40Hz:** Ondas gamma aumentam concentração e neuroplasticidade\n• 💊 **Dopamina natural:** Completar micro-tarefas gera recompensas neurais que sustentam motivação\n\nSeu cérebro está mais focado entre 10h-12h e 14h-16h (picos de cortisol e dopamina).",
+        suggestions: ["Como funciona a dopamina?", "Técnicas de respiração para foco", "Combater procrastinação"]
       },
       humor: {
-        content: "Vejo que você está com humor positivo (😊) e energia em 75%! Isso é ótimo! 🌟\n\nPara manter essa energia:\n• ☀️ Aproveite para tarefas importantes\n• 💧 Hidrate-se bem\n• 🚶 Faça pausas ativas\n\nSeu melhor horário de foco será entre 14h-16h hoje!",
-        suggestions: ["Ver cronograma ideal", "Exercícios de energia", "Definir prioridades"]
+        content: "🧬 **Análise Neuroquímica do Humor:**\n\nSeu humor positivo indica bons níveis de serotonina e dopamina! Isso otimiza:\n\n• 🎯 **Neuroplasticidade:** Humor positivo aumenta BDNF (fator neurotrófico), facilitando aprendizado\n• ⚡ **Energia cognitiva:** Quando serotonina está alta, o córtex pré-frontal funciona 40% melhor\n• 🧠 **Memória:** Estados positivos ativam o hipocampo, melhorando consolidação de memórias\n\n**Cronobiologia:** Seu pico energético será às 14h-16h (cortisol + dopamina). Use para tarefas complexas!\n\n💡 Mantenha esse estado com gratidão (libera oxitocina) e hidratação (cérebro é 75% água).",
+        suggestions: ["Como manter serotonina alta?", "Ciência da gratidão", "Cronobiologia pessoal"]
       },
       estudo: {
-        content: "Vou criar um plano personalizado para você! 📚✨\n\n**Plano de Estudo Otimizado:**\n• 🌅 9h-11h: Conteúdo mais difícil (energia alta)\n• ☕ 11h-11h15: Pausa\n• 📖 11h15-12h30: Revisão ativa\n• 🍽️ 12h30-14h: Almoço e descanso\n• 🎯 14h-16h: Foco intenso (pico de energia)\n• 🧘 16h-16h15: Meditação\n\nQuer que eu configure esses horários na sua agenda?",
-        suggestions: ["Adicionar à agenda", "Ajustar horários", "Técnicas de memorização"]
+        content: "📚 **Neurociência do Aprendizado:**\n\n**Plano baseado em ritmos circadianos e neurotransmissores:**\n\n• 🌅 **9h-11h:** Cortisol alto = melhor para conteúdo difícil (neurônios mais 'despertos')\n• 🧠 **Técnica Feynman:** Explicar conceitos ativa múltiplas áreas cerebrais\n• 💤 **Microdescansos:** A cada 25min, cérebro consolida informações no modo padrão\n• 🔄 **Revisão espaçada:** Hermann Ebbinghaus provou que repetir em intervalos específicos (1h, 1dia, 1semana) transfere da memória de curto para longo prazo\n• 🎯 **14h-16h:** Pico de dopamina + menor adenosina = foco máximo\n\n💡 **Hack neurológico:** Estudar antes de dormir + revisar ao acordar = consolida 300% mais eficiente!",
+        suggestions: ["Técnica Feynman explicada", "Como funciona a memória", "Revisão espaçada científica"]
       },
       energia: {
-        content: "Vamos dar aquele boost! ⚡💪\n\n**Estratégias imediatas:**\n• 🫁 5 respirações profundas (agora mesmo!)\n• 💧 1 copo de água\n• 🎵 Música energizante por 2 minutos\n• 🚶 Caminhada de 3 minutos\n• ☕ Chá verde ou café (se necessário)\n\n**Energia atual: 75% → Meta: 90%**\n\nVamos começar?",
-        suggestions: ["Iniciar respiração", "Playlist energizante", "Exercícios rápidos"]
+        content: "⚡ **Biohacking de Energia:**\n\n**Estratégias baseadas em neurociência:**\n\n• 🫁 **Respiração 4-7-8:** Ativa sistema nervoso parassimpático, reduz cortisol em 23%\n• 💧 **Hidratação neural:** Cérebro desidratado perde 12% da eficiência cognitiva\n• 🚶 **Caminhada 3min:** Aumenta BDNF e noradrenalina (neurotransmissor da energia)\n• ☕ **Adenosina blocking:** Cafeína bloqueia receptores de cansaço por 4-6h\n• 🎵 **Frequências 40Hz:** Estimulam ondas gamma, aumentando alerta mental\n\n💡 **Hack avançado:** Exposição à luz azul por 2min ativa núcleo supraquiasmático = energia instantânea!\n\n**Status energético:** Neurônios →  75% ativados → Meta: 90%",
+        suggestions: ["Respiração 4-7-8 guiada", "Ciência da luz azul", "Como fazer neurofeedback"]
+      },
+      stress: {
+        content: "🧠 **Neurobiologia do Estresse:**\n\n**O que acontece no seu cérebro:**\n• Amígdala hiperativa libera cortisol/adrenalina\n• Córtex pré-frontal (área racional) fica 'offline'\n• Hipocampo (memória) é temporariamente prejudicado\n\n**Protocolo de recuperação neural:**\n• 🫁 **Box breathing (4-4-4-4):** Reativa nervo vago, reduz cortisol em minutos\n• 🧘 **Mindfulness 5min:** Estudos mostram que reestrutura amígdala em 8 semanas\n• 🚶 **Movimento suave:** Libera endorfinas e metaboliza cortisol\n• 💤 **Power nap 20min:** Reseta sistema nervoso simpático\n\n💡 **Fato científico:** Estresse crônico reduz neurônios do hipocampo, mas são regeneráveis com práticas corretas!",
+        suggestions: ["Box breathing guiado", "Ciência do mindfulness", "Como regenerar neurônios"]
+      },
+      procrastinacao: {
+        content: "🎯 **Neurociência da Procrastinação:**\n\n**Por que procrastinamos:**\n• Sistema límbico (prazer imediato) vs córtex pré-frontal (planejamento)\n• Baixa dopamina torna tarefas 'pouco recompensadoras'\n• Amígdala ativa medo do fracasso = paralisia\n\n**Hacks neurológicos anti-procrastinação:**\n• 🍅 **Regra dos 2 minutos:** Inicia o sistema de recompensa neural\n• 🎯 **Micro-objetivos:** Cada conclusão libera dopamina, criando momentum\n• 🚫 **Bloqueio de distração:** Preserva neurotransmissores para a tarefa principal\n• ⏰ **Timeboxing:** Córtex pré-frontal trabalha melhor com limites definidos\n\n💡 **Descoberta:** Procrastinação é defeito evolutivo - nosso cérebro não evoluiu para tarefas abstratas/futuras!",
+        suggestions: ["Regra dos 2 minutos", "Hack da dopamina", "Como treinar pré-frontal"]
       },
       default: {
-        content: "Entendi! Com base no seu perfil e humor atual, aqui estão minhas sugestões personalizadas:\n\n• 🎯 Foque nas tarefas importantes entre 14h-16h\n• 🧘 Faça uma pausa de 10 minutos a cada hora\n• 📱 Tente uma pausa digital de 15 minutos\n• 💧 Mantenha-se hidratado\n\nO que gostaria de explorar primeiro?",
-        suggestions: ["Otimizar rotina", "Melhorar concentração", "Gerenciar energia", "Reduzir estresse"]
+        content: "🧠 **Sou sua Mindy - Especialista em Neurociência Aplicada!**\n\nComo psicóloga digital especializada em neurociência cognitiva, posso te ajudar com:\n\n• 🎯 **Otimização de foco:** Baseado em ciência da atenção\n• 🧬 **Regulação emocional:** Neurobiologia do humor e stress\n• 💡 **Aprendizado eficiente:** Como seu cérebro processa informações\n• ⚡ **Biohacking mental:** Técnicas para hackear neurotransmissores\n• 🔄 **Formação de hábitos:** Neuroplasticidade e loops de recompensa\n\nTudo baseado em estudos científicos e neuroimagem funcional!\n\n**O que gostaria de otimizar no seu cérebro hoje?**",
+        suggestions: ["Como melhorar meu foco?", "Combater ansiedade", "Hackear produtividade", "Ciência do sono"]
       }
     };
 
     const input = userInput.toLowerCase();
     let response = responses.default;
 
-    if (input.includes("foco") || input.includes("concentra")) {
+    if (input.includes("foco") || input.includes("concentra") || input.includes("atenção")) {
       response = responses.foco;
-    } else if (input.includes("humor") || input.includes("energia") || input.includes("sentindo")) {
+    } else if (input.includes("humor") || input.includes("sentindo") || input.includes("estado")) {
       response = responses.humor;
-    } else if (input.includes("estud") || input.includes("aprender")) {
+    } else if (input.includes("estud") || input.includes("aprender") || input.includes("memória")) {
       response = responses.estudo;
-    } else if (input.includes("energia") || input.includes("cansad") || input.includes("boost")) {
+    } else if (input.includes("energia") || input.includes("cansad") || input.includes("boost") || input.includes("disposição")) {
       response = responses.energia;
+    } else if (input.includes("stress") || input.includes("estresse") || input.includes("ansied") || input.includes("nervos")) {
+      response = responses.stress;
+    } else if (input.includes("procrastin") || input.includes("adiando") || input.includes("preguiça")) {
+      response = responses.procrastinacao;
     }
 
     return {
-      id: Date.now().toString(),
-      type: "ai",
       content: response.content,
-      timestamp: new Date(),
       suggestions: response.suggestions
     };
   };

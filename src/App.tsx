@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Welcome from "./pages/Welcome";
 import Profile from "./pages/Profile";
+import MoodFirst from "./pages/MoodFirst";
+import RoutineScreen from "./pages/RoutineScreen";
+import ChallengesScreen from "./pages/ChallengesScreen";
 import Index from "./pages/Index";
 import MoodPage from "./pages/MoodPage";
 import RoutinesPage from "./pages/RoutinesPage";
@@ -27,6 +30,9 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/mood-first" element={<MoodFirst />} />
+            <Route path="/routine-summary" element={<RoutineScreen />} />
+            <Route path="/challenges-screen" element={<ChallengesScreen />} />
             <Route path="/dashboard" element={<Index />} />
             <Route path="/mood" element={<MoodPage />} />
             <Route path="/routines" element={<RoutinesPage />} />
