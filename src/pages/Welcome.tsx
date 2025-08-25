@@ -1,12 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Brain, Zap, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 const Welcome = () => {
   const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen gradient-dopamind flex items-center justify-center relative overflow-hidden">
+  return <div className="min-h-screen gradient-dopamind flex items-center justify-center relative overflow-hidden">
       {/* Animated particles background */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-2 h-2 bg-accent rounded-full animate-pulse"></div>
@@ -36,9 +33,7 @@ const Welcome = () => {
           <h1 className="text-4xl font-bold mb-2 text-shadow">
             Dopamind
           </h1>
-          <p className="text-white/80 text-sm">
-            Powered by AI • Focused on You
-          </p>
+          <p className="text-white/80 text-sm">Powered by Vitória • Focused on You</p>
         </div>
 
         {/* Impact phrase */}
@@ -53,16 +48,12 @@ const Welcome = () => {
         </div>
 
         {/* Action button */}
-        <Button 
-          onClick={() => navigate('/profile')}
-          size="lg"
-          className="
+        <Button onClick={() => navigate('/profile')} size="lg" className="
             bg-white/20 hover:bg-white/30 text-white border-2 border-white/30 
             backdrop-blur-sm text-lg px-8 py-4 h-auto rounded-2xl
             transition-all duration-300 hover:scale-105 hover:shadow-2xl
             group
-          "
-        >
+          ">
           <span className="mr-3">🚀</span>
           Entrar no Dopamind
           <Sparkles className="ml-3 w-5 h-5 group-hover:animate-spin" />
@@ -81,8 +72,6 @@ const Welcome = () => {
       <div className="absolute bottom-10 right-10 text-4xl opacity-20 pulse-gentle">
         ⚡
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Welcome;
