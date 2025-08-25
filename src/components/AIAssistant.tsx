@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AIAssistant = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <Button
         size="lg"
+        onClick={() => navigate('/ai-chat')}
         className="
           h-14 w-14 rounded-full shadow-lg gradient-dopamind text-white
           hover:scale-110 transition-all duration-300 float glow-effect
